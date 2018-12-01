@@ -5,7 +5,7 @@ def calibrate(sequence):
 
 def calibrateSame(sequence):
     current = 0
-    numberList = set([0])
+    numberList = {0} # set
 
     splitSequence = [int(part) for part in sequence.split(',')]
 
@@ -17,5 +17,5 @@ def calibrateSame(sequence):
         else:
             numberList.add(current)
 
-sequence = ','.join(open("./input.txt").readlines())
-print(calibrateSame(sequence))
+# sequence = ','.join(open("./input.txt").readlines())
+# print(calibrateSame(sequence))
