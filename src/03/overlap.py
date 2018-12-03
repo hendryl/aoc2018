@@ -22,31 +22,57 @@ def claim(line):
         for x in xrange:
             claimResult.update({(x, y): 1})
 
-    return claimResult
+    return (claimData['id'], claimResult)
 
-
-def findOverlapCountInClaims(lines):
+def createClaimsData(lines):
     claimResults = [claim(line) for line in lines]
 
-    resultDict = claimResults.pop()
+    resultDict = claimResults.pop()[1]
 
     for claimResult in claimResults:
-        for point in claimResult.keys():
+        claimResultDict = claimResult[1]
+        for point in claimResultDict.keys():
             if point in resultDict:
-                newValue = resultDict[point] + claimResult[point]
+                newValue = resultDict[point] + claimResultDict[point]
                 resultDict.update({ point: newValue })
             else:
                 resultDict.update({ point: 1 })
 
+    return resultDict
+
+def findOverlapCountInClaims(lines):
+    claimsData = createClaimsData(lines)
+
     count = 0
-    for key in resultDict.keys():
-        if key in resultDict and resultDict[key] > 1:
+    for key in claimsData.keys():
+        if key in claimsData and claimsData[key] > 1:
             count += 1
 
     return count
 
-def main():
+def findClaimWithoutOverlaps(lines):
+    claimsResults = createClaimsData(lines)
+    claims = [claim(line) for line in lines]
+
+    for c in claims:
+        count = 0
+        cData = c[1]
+        for point in cData.keys():
+            if claimsResults[point] > 1:
+                count += 1
+
+        if count == 0:
+            return c[0]
+
+    return 'Not Found'
+
+def part1():
     lines = open("./input.txt").readlines()
     print(findOverlapCountInClaims(lines))
 
-main()
+def part2():
+    lines = open("./input.txt").readlines()
+    print(findClaimWithoutOverlaps(lines))
+
+# part1()
+# part2()

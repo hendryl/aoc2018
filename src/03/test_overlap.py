@@ -1,5 +1,5 @@
 import pytest
-from overlap import separate, claim, findOverlapCountInClaims
+from overlap import separate, claim, findOverlapCountInClaims, findClaimWithoutOverlaps
 
 def test_separate():
     assert separate('#123 @ 3,2: 5x4') == {
@@ -9,16 +9,16 @@ def test_separate():
     }
 
 def test_claim():
-    assert claim('#123 @ 3,2: 2x3') == {
+    assert claim('#123 @ 3,2: 2x3') == ('#123', {
         (3,2): 1,
         (3,3): 1,
         (3,4): 1,
         (4,2): 1,
         (4,3): 1,
         (4,4): 1,
-    }
+    })
 
-    assert claim('#123 @ 8,2: 7x1') == {
+    assert claim('#123 @ 8,2: 7x1') == ('#123', {
         (8,2): 1,
         (9,2): 1,
         (10,2): 1,
@@ -26,7 +26,7 @@ def test_claim():
         (12,2): 1,
         (13,2): 1,
         (14,2): 1,
-    }
+    })
 
 def test_findOverlapCountInClaims():
     assert findOverlapCountInClaims([
@@ -34,3 +34,10 @@ def test_findOverlapCountInClaims():
         '#2 @ 3,1: 4x4',
         '#3 @ 5,5: 2x2'
     ]) == 4
+
+def test_findClaimWithoutOverlaps():
+    assert findClaimWithoutOverlaps([
+        '#1 @ 1,3: 4x4',
+        '#2 @ 3,1: 4x4',
+        '#3 @ 5,5: 2x2'
+    ]) == '#3'
